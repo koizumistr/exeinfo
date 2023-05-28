@@ -9,16 +9,16 @@ class ExeHeaderParser
   def parseheader(file, level = 0)
     @f = file
     @parsed = false
-    if file.size < 0x1b then
-      @message = "Too short"
+    if file.size < 0x1b
+      @message = 'Too short'
       return
     end
-    if file.readbyte != 0x4d then #M
-      @message = "Invalid magic"
+    if file.readbyte != 0x4d # M
+      @message = 'Invalid magic'
       return
     end
-    if file.readbyte != 0x5a then #Z
-      @message = "Invalid magic"
+    if file.readbyte != 0x5a # Z
+      @message = 'Invalid magic'
       return
     end
 
@@ -37,31 +37,31 @@ class ExeHeaderParser
     @lfarlc = readword
     @ovno = readword
 
-    if level == 0 then
+    if level == 0
       @parsed = true
       return
     end
 
-    if level > 1 then
+    if level > 1
       @re1 = String.new
       (@lfarlc - 0x1c).times do
-        @re1 = @re1 + " " + sprintf("%02x", file.readbyte)
+        @re1 = @re1 + ' ' + sprintf('%02x', file.readbyte)
       end
     else
       (@lfarlc - 0x1c).times { file.readbyte }
     end
 
-    @offset = Array.new
-    @segment = Array.new
+    @offset = []
+    @segment = []
     @crlc.times do |i|
       @offset[i] = readword
       @segment[i] = readword
     end
 
-    if level > 1 then
+    if level > 1
       @re2 = String.new
       (@cparhder * 16 - @lfarlc - @crlc * 4).times do
-        @re2 = @re2 + " " + sprintf("%02x", file.readbyte)
+        @re2 = @re2 + ' ' + sprintf('%02x', file.readbyte)
       end
     else
       (@cparhder * 16 - @lfarlc - @crlc * 4).times {file.readbyte}
@@ -73,6 +73,7 @@ class ExeHeaderParser
   def offset(i)
     @offset[i]
   end
+
   def segment(i)
     @segment[i]
   end
