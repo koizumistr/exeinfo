@@ -33,6 +33,10 @@ end
 File.open(ARGV[0], "rb") do |file|
   t = ExeHeaderParser.new
   t.parseheader(file, level)
+  if not t.parsed then
+    puts t.message
+    exit
+  end
 
   puts sprintf("magic number: %4x", t.magic)
   puts sprintf("bytes in last page: %d", t.cblp)

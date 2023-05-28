@@ -1,24 +1,25 @@
 class ExeHeaderParser
   attr_reader :magic, :cblp, :cp, :crlc, :cparhder, :minalloc, :maxalloc, :ss, :sp, :checksum,
-              :ip, :cs, :lfarlc, :ovno, :re1, :re2
+              :ip, :cs, :lfarlc, :ovno, :re1, :re2, :parsed, :message
 
   def readword
     @f.readbyte + @f.readbyte * 256
   end
 
   def parseheader(file, level = 0)
-    @f = file  
+    @f = file
+    @parsed = false
     if file.size < 0x1b then
-      print "Error"
-      exit
+      @message = "Too short"
+      return
     end
     if file.readbyte != 0x4d then #M
-      print "Error2"
-      exit
+      @message = "Invalid magic"
+      return
     end
     if file.readbyte != 0x5a then #Z
-      print "Error3"
-      exit
+      @message = "Invalid magic"
+      return
     end
 
     @magic = 0x4d5a
@@ -37,6 +38,7 @@ class ExeHeaderParser
     @ovno = readword
 
     if level == 0 then
+      @parsed = true
       return
     end
 
@@ -64,6 +66,7 @@ class ExeHeaderParser
     else
       (@cparhder * 16 - @lfarlc - @crlc * 4).times {file.readbyte}
     end
+    @parsed = true
 #    puts file.readbyte # XXXX
   end
 
