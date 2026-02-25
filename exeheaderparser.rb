@@ -45,7 +45,7 @@ class ExeHeaderParser
     if level > 1
       @re1 = String.new
       (@lfarlc - 0x1c).times do
-        @re1 = @re1 + ' ' + sprintf('%02x', file.readbyte)
+        @re1 << " #{format('%02x', file.readbyte)}"
       end
     else
       (@lfarlc - 0x1c).times { file.readbyte }
@@ -61,10 +61,10 @@ class ExeHeaderParser
     if level > 1
       @re2 = String.new
       (@cparhder * 16 - @lfarlc - @crlc * 4).times do
-        @re2 = @re2 + ' ' + sprintf('%02x', file.readbyte)
+        @re2 << " #{format('%02x', file.readbyte)}"
       end
     else
-      (@cparhder * 16 - @lfarlc - @crlc * 4).times {file.readbyte}
+      (@cparhder * 16 - @lfarlc - @crlc * 4).times { file.readbyte }
     end
     @parsed = true
 #    puts file.readbyte # XXXX

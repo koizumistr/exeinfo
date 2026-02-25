@@ -10,9 +10,10 @@ opt.on('-r', 'also output reserved regions')
 
 begin
   opt.parse!(ARGV, into: params)
-#p ARGV
-#p params
-rescue
+# p ARGV
+# p params
+rescue OptionParser::ParseError => e
+  puts "Error: #{e.message}"
   puts opt.help
   exit(-1)
 end
@@ -22,13 +23,13 @@ if ARGV.length != 1
   exit(-2)
 end
 
-if !params[:r].nil?
-  level = 2
-elsif !params[:t].nil?
-  level = 1
-else
-  level = 0
-end
+level = if !params[:r].nil?
+          2
+        elsif !params[:t].nil?
+          1
+        else
+          0
+        end
 
 File.open(ARGV[0], 'rb') do |file|
   t = ExeHeaderParser.new
